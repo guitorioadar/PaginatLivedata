@@ -1,5 +1,7 @@
 package com.example.paginatlivedata;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.paging.PageKeyedDataSource;
 
@@ -10,6 +12,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ItemDataSource extends PageKeyedDataSource<Integer, Item> {
+
+    private  final String TAG = "ItemDataSource";
 
     //the size of a page that we want
     public static final int PAGE_SIZE = 50;
@@ -38,7 +42,8 @@ public class ItemDataSource extends PageKeyedDataSource<Integer, Item> {
 
                     @Override
                     public void onFailure(Call<StackoverflowApiResponse> call, Throwable t) {
-
+                        Log.d(TAG, "onFailure: loadInitial: "+t.getMessage());
+                        t.printStackTrace();
                     }
                 });
 
@@ -66,7 +71,8 @@ public class ItemDataSource extends PageKeyedDataSource<Integer, Item> {
 
                     @Override
                     public void onFailure(Call<StackoverflowApiResponse> call, Throwable t) {
-
+                        Log.d(TAG, "onFailure: loadBefore: "+t.getMessage());
+                        t.printStackTrace();
                     }
                 });
     }
@@ -93,7 +99,8 @@ public class ItemDataSource extends PageKeyedDataSource<Integer, Item> {
 
                     @Override
                     public void onFailure(Call<StackoverflowApiResponse> call, Throwable t) {
-
+                        Log.d(TAG, "onFailure: loadAfter: "+t.getMessage());
+                        t.printStackTrace();
                     }
                 });
     }
