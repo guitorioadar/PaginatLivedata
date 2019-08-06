@@ -10,7 +10,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,11 @@ import android.view.ViewGroup;
  */
 public class MainFragment extends Fragment {
 
+    private final String TAG = "MainFragment";
+    
     private View view;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeToRefresh;
 
     public MainFragment() {
         // Required empty public constructor
@@ -34,6 +39,9 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        swipeToRefresh = view.findViewById(R.id.swipe_down_to_refresh_list);
+
 
 
         //setting up recyclerview
@@ -61,6 +69,37 @@ public class MainFragment extends Fragment {
 
         //setting the adapter
         recyclerView.setAdapter(adapter);
+
+        swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                Log.d(TAG, "onRefresh: swiped ");
+
+                ItemViewModel itemViewModel = ViewModelProviders.of(getActivity()).get(ItemViewModel.class);
+
+                //observing the itemPagedList from view model
+                itemViewModel.itemPagedList.observe(getActivity(), new Observer<PagedList<Item>>() {
+                    @Override
+                    public void onChanged(@Nullable PagedList<Item> items) {
+
+                        Log.d(TAG, "onChanged: swiped Result ");
+
+                        //in case of any changes
+                        //submitting the items to adapter
+                        adapter.submitList(items);
+
+                        //setting the adapter
+                        recyclerView.setAdapter(adapter);
+
+                        swipeToRefresh.setRefreshing(false);
+                    }
+                });
+
+            }
+        });
+
+
 
 
         return view;

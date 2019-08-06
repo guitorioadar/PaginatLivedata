@@ -15,6 +15,7 @@ public class ItemDataSourceFactory extends DataSource.Factory {
     public DataSource<Integer,Item> create() {
 
         //getting our data source object
+//        ItemDataSource itemDataSource = new ItemDataSource();
         ItemDataSource itemDataSource = new ItemDataSource();
 
         //posting the datasource to get the values
